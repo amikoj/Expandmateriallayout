@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/del"
+        android:text="123"
+        android:background="@color/red_normal"
+        android:textColor="@color/white"
+        android:layout_gravity="end"
+
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/item_info"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:visibility="visible"
+        android:background="@color/white"
+        android:paddingStart="8dip"
+        android:paddingEnd="8dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+
+
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/date_of_month"-->
+                <!--android:textColor="@color/grapbg"-->
+                <!--android:textSize="16sp"-->
+                <!--android:gravity="center|bottom"-->
+                <!--android:text="28"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/date_of_week"-->
+                <!--android:textColor="@color/grapbg"-->
+                <!--android:textSize="12sp"-->
+                <!--android:text="周五"-->
+                <!--android:gravity="center|top"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dip" />-->
+        <!--</LinearLayout>-->
+
+
+
+
+        <ImageView
+            android:padding="5dip"
+            android:id="@+id/child_icon"
+            android:scaleType="fitCenter"
+            android:src="@drawable/book_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+
+
+            <LinearLayout
+                android:padding="5dip"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/child_name"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:gravity="center|bottom|left"
+                    android:text="凤打扫房间"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+                <TextView
+                    android:id="@+id/child_des"
+                    android:textColor="@color/grapbg"
+                    android:textSize="16sp"
+                    android:text="备注信息"
+                    android:gravity="center|top|left"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dip" />
+            </LinearLayout>
+
+
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+            <TextView
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dip"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimary"
+                android:text="800"
+                android:id="@+id/date_expenditure"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+          </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/no_recorder"
+        android:orientation="horizontal"
+
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:padding="5dip"
+        android:gravity="center_horizontal"
+        android:layout_height="65dp">
+
+
+        <ImageView
+            android:id="@+id/no_recorder_icon"
+            android:src="@drawable/ic_action_about"
+            android:layout_margin="5dip"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+
+
+
+        <TextView
+            android:id="@+id/no_recorder_text"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/grapbg"
+            android:text="No Recoder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+    <!--<View-->
+        <!--android:background="@color/divider_line_color"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dip"/>-->
+
+
+    </FrameLayout>
+
+</FrameLayout>

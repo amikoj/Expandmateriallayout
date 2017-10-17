@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#aaaaaaaa"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <cn.enjoytoday.expandmateriallayout.ExpandMasterialLayout
+        android:layout_marginTop="80dp"
+        android:id="@+id/expandable_list_view"
+        android:background="@color/white"
+        android:dividerHeight="1dp"
+        android:divider="@color/greeting_show_background_color"
+        android:clipChildren="true"
+        android:listSelector="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="260dp">
+
+    </cn.enjoytoday.expandmateriallayout.ExpandMasterialLayout>
+
+
+</LinearLayout>

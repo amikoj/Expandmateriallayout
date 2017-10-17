@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ExpandMaterialLayout</string>
+
+    <string name="header_tips">Header View</string>
+
+    <string name="footer_tips">footer View</string>
+</resources>

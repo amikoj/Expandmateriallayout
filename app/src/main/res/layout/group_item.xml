@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <ImageView
+        android:tag="0"
+        android:id="@+id/expansion_view"
+        android:src="@drawable/ic_action_extended"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/group_name"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:gravity="left|bottom"
+            android:text="3周"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/group_des"
+            android:textColor="@color/grapbg"
+            android:textSize="10sp"
+            android:text="08/12-08/15"
+            android:gravity="left|top"
+            android:layout_width="match_parent"
+            android:layout_height="20dip" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_marginEnd="10dp"
+        android:gravity="end|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+
+            android:layout_gravity="end"
+            android:layout_marginEnd="5dip"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:textColor="@color/grapbg"
+            android:text="800"
+            android:id="@+id/numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
