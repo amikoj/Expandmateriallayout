@@ -7,18 +7,22 @@
     android:layout_height="match_parent">
 
 
-    <cn.enjoytoday.expandmateriallayout.ExpandMasterialLayout
+    <cn.enjoytoday.expandmateriallayout.ExpandRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_marginTop="80dp"
-        android:id="@+id/expandable_list_view"
-        android:background="@color/white"
-        android:dividerHeight="1dp"
-        android:divider="@color/greeting_show_background_color"
-        android:clipChildren="true"
-        android:listSelector="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="300dp">
 
-    </cn.enjoytoday.expandmateriallayout.ExpandMasterialLayout>
+        <ExpandableListView
+            android:id="@+id/expandable_list_view"
+            android:background="@color/white"
+            android:dividerHeight="1dp"
+            android:clipChildren="true"
+            android:listSelector="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
 
+        </ExpandableListView>
+    </cn.enjoytoday.expandmateriallayout.ExpandRefreshLayout>
 
 </LinearLayout>

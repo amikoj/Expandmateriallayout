@@ -241,8 +241,8 @@ abstract class  ExpandBasicAdapter(private var context:Context,private var child
                 }
             }
 
-            addChildView(groupPosition,childPosition,isLastChild,convertView,childViewHolder.item_layout)
-
+            val itemView=addChildView(groupPosition,childPosition,isLastChild,convertView,childViewHolder.item_layout)
+            childViewHolder.item_layout.addView(itemView)
             /**
              * 添加操作bar
              */
@@ -259,10 +259,6 @@ abstract class  ExpandBasicAdapter(private var context:Context,private var child
 //                    childViewHolder.operation_bar_layout.addView(rightOperationLayout)        //添加右侧操作栏父布局
                 }
             }
-
-
-
-
 
             view.tag=childViewHolder
         }else{
@@ -386,7 +382,7 @@ abstract class  ExpandBasicAdapter(private var context:Context,private var child
     /**
      * 填充单个条目数据
      */
-    abstract fun addChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?)
+    abstract fun addChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?):View
 
 
 

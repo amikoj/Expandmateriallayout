@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AbsListView
+import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import cn.enjoytoday.expandmateriallayout.callbacks.RefreshCallback
 import kotlinx.android.synthetic.main.header_view.view.*
@@ -86,30 +87,30 @@ class ExpandMasterialLayout(context: Context, attributeset: AttributeSet?, defSt
         headView!!.tips.setText(R.string.header_tips)
         footerView=View.inflate(context,R.layout.header_view,null)
         footerView!!.tips.setText(R.string.footer_tips)
-        headView!!.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT)
-
-        addHeaderView(headView!!)
-        headView!!.visibility= View.GONE
+    }
 
 
-//
-//        this.removeViewInLayout(headView)
-
-//        addFooterView(footerView!!)
-//        headView!!.visibility=View.GONE
-//        headView!!.setPadding(0,-1400,0,0)
-//
-//        headView!!.invalidate()
-//        footerView!!.visibility=View.GONE
-//        footerView!!.setPadding(0,-1400,0,0)
-//
-//        footerView!!.invalidate()
-//
-//        headView!!.requestLayout()
+    override fun setAdapter(adapter: ExpandableListAdapter?) {
+        if(isPaging){
+            this.addHeaderView(headView)
+            this.addFooterView(footerView)
+        }
+        super.setAdapter(adapter)
     }
 
 
 
+
+    fun resetHeadView(){
+        headView!!.visibility=View.GONE
+        headView!!.setPadding(0,-headView!!.height,0,0)
+        headView!!.requestLayout()
+
+        footerView!!.setPadding(0,-footerView!!.height,0,0)
+        footerView!!.visibility=View.GONE
+        footerView!!.requestLayout()
+
+    }
 
 
 

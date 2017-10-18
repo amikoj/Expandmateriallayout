@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">ExpandMaterialLayout</string>
 
-    <string name="header_tips">Header View</string>
+    <!-- 上拉下拉加载-->
+    <string name="drop_down_refresh_text">Drop down update</string>
+    <string name="pull_up_loads_text">Pull-up loads more</string>
+    <string name="loading_text">Loading…</string>
+    <string name="already_update_times">Has been updated to %s</string>
+    <string name="release_after_loading">Release after loading</string>
+    <string name="pull_down_loading">Pull down after loading</string>
+    <string name="pull_up_loading">Pull up after loading</string>
 
-    <string name="footer_tips">footer View</string>
 </resources>

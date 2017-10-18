@@ -51,3 +51,11 @@ fun Activity.toast(message: CharSequence) {
     superToast.background = R.drawable.toast_background
     superToast.show()
 }
+
+/**
+ * 格式化给定的日期,输出为字符串格式
+ * @param 需要给是化的日期,默认为当前
+ */
+fun Any.formatDate(millils: Long = System.currentTimeMillis()):String{
+    return java.text.DateFormat.getDateInstance().format(millils)
+}
