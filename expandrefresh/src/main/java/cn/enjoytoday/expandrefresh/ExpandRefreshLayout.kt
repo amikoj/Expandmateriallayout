@@ -46,7 +46,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
     private val ANIMATE_TO_START_DURATION = 200
     private val DEFAULT_CIRCLE_TARGET = 64
 
-    // SuperSwipeRefreshLayout内的目标View，比如RecyclerView,ListView,ScrollView,GridView
+    //内的目标View,比如RecyclerView,ListView,ScrollView,GridView
     private var mTarget:View? = null
 
     private var mListener:OnPullRefreshListener? = null// 下拉刷新listener
@@ -186,17 +186,9 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
     }
 
      fun setFooterView(child:View?) {
-         if (child == null)
-         {
-             return
-         }
-         if (mFooterViewContainer == null)
-         {
-             return
-         }
+         if (child == null || mFooterViewContainer == null) return
          mFooterViewContainer!!.removeAllViews()
-         val layoutParams = RelativeLayout.LayoutParams(
-                 mFooterViewWidth, mFooterViewHeight)
+         val layoutParams = RelativeLayout.LayoutParams(mFooterViewWidth, mFooterViewHeight)
          mFooterViewContainer!!.addView(child, layoutParams)
 
 }
@@ -250,13 +242,14 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
      }
 
+
     /**
- * 孩子节点绘制的顺序
- *
- * @param childCount
- * @param i
- * @return
- */
+     * 孩子节点绘制的顺序
+     *
+     * @param childCount
+     * @param i
+     * @return
+     */
      override fun getChildDrawingOrder(childCount:Int, i:Int):Int {// 将新添加的View,放到最后绘制
         if (mHeaderViewIndex < 0 && mFooterViewIndex < 0) return i
         else if (i == childCount - 2) return mHeaderViewIndex
@@ -294,7 +287,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      * 添加底部布局
      */
     private fun createFooterViewContainer() {
-        mFooterViewContainer = RelativeLayout(getContext())
+        mFooterViewContainer = RelativeLayout(context)
         mFooterViewContainer!!.visibility = View.GONE
         addView(mFooterViewContainer)
 
@@ -451,7 +444,11 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
     }
 
-     override fun onLayout(changed:Boolean, left:Int, top:Int, right:Int, bottom:Int) {
+
+    /**
+     *
+     */
+    override fun onLayout(changed:Boolean, left:Int, top:Int, right:Int, bottom:Int) {
          val width = measuredWidth
          val height = measuredHeight
          if (childCount == 0) {
@@ -540,7 +537,8 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      * @return
      */
     private fun isChildScrollToBottom():Boolean {
-        if (isChildScrollToTop()) return false
+        log(message = "isChildScrollToBottom")
+//        if (isChildScrollToTop() ) return false
         if (mTarget is RecyclerView) {
             val recyclerView = mTarget as RecyclerView?
             val layoutManager = recyclerView!!.layoutManager
@@ -561,17 +559,18 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
             }
             return false
         } else if (mTarget is AbsListView) {
-            val absListView = mTarget as AbsListView?
-            val count = absListView!!.adapter.count
-            val fristPos = absListView.firstVisiblePosition
-            if (fristPos == 0 && absListView.getChildAt(0).top >= absListView.paddingTop) {
-                return false
-            }
-            val lastPos = absListView.lastVisiblePosition
-            if (lastPos > 0 && count > 0 && lastPos == count - 1) {
-                return true
-            }
-            return false
+//            val absListView = mTarget as AbsListView?
+//            val count = absListView!!.adapter.count
+//            val fristPos = absListView.firstVisiblePosition
+//            if (fristPos == 0 && absListView.getChildAt(0).top >= absListView.paddingTop) {
+//                return false
+//            }
+//            val lastPos = absListView.lastVisiblePosition
+//            if (lastPos > 0 && count > 0 && lastPos == count - 1) {
+//                return true
+//            }
+//            return false
+            return true
         } else if (mTarget is ScrollView) {
             val scrollView = mTarget as ScrollView?
             val view = scrollView!!.getChildAt(scrollView.childCount - 1)
@@ -598,6 +597,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
     }
 
 
+
     /**
      * 主要判断是否应该拦截子View的事件<br></br>
      * 如果拦截，则交给自己的OnTouchEvent处理<br></br>
@@ -605,13 +605,13 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      */
      override fun onInterceptTouchEvent(ev:MotionEvent):Boolean {
 
+
         ensureTarget()
         val action = MotionEventCompat.getActionMasked(ev)
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false
         }
-        if (!isEnabled || mReturningToStart || mRefreshing || mLoadMore
-                || (!isChildScrollToTop() && !isChildScrollToBottom()))
+        if (!isEnabled || mReturningToStart || mRefreshing || mLoadMore || (!isChildScrollToTop() && !isChildScrollToBottom()))
             return false
 
         // 下拉刷新判断
@@ -632,8 +632,9 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 var yDiff = 0f
                 if (isChildScrollToBottom()) {
                     yDiff = mInitialMotionY - y// 计算上拉距离
-                    if (yDiff > mTouchSlop && !mIsBeingDragged) {// 判断是否下拉的距离足够
+                    if (yDiff > mTouchSlop && !mIsBeingDragged) {// 判断是否上拉的距离足够
                         mIsBeingDragged = true// 正在上拉
+
                     }
                 } else {
                     yDiff = y - mInitialMotionY// 计算下拉距离
@@ -657,8 +658,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                     }
                 } else {
                     yDiff = y - mInitialMotionY
-                    if (yDiff > mTouchSlop && !mIsBeingDragged)
-                    {
+                    if (yDiff > mTouchSlop && !mIsBeingDragged) {
                         mIsBeingDragged = true
                     }
                 }
@@ -687,18 +687,34 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
      }
 
+
+    var beforey=-1f
+
+
     override fun onTouchEvent(ev:MotionEvent):Boolean {
         val action = MotionEventCompat.getActionMasked(ev)
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false
         }
-        if (!isEnabled || mReturningToStart || (!isChildScrollToTop() && !isChildScrollToBottom())) {
+        if (!isEnabled || mReturningToStart || (ViewCompat.canScrollVertically(mTarget, -1) && ViewCompat.canScrollVertically(mTarget, 1))) {
             // 如果子View可以滑动，不拦截事件，交给子View处理
             return false
         }
 
-        return if (isChildScrollToBottom()) handlerPushTouchEvent(ev, action)// 上拉加载更多
-        else handlerPullTouchEvent(ev, action)      // 下拉刷新
+        when {
+            beforey==-1f -> beforey=ev.y
+            ev.y-beforey>0 -> {
+                beforey=ev.y
+                return  handlerPullTouchEvent(ev, action)      // 下拉刷新
+            }
+            ev.y-beforey<0 -> return  handlerPushTouchEvent(ev, action)      // 下拉刷新
+        }
+
+        return false
+
+//        return if (isChildScrollToBottom() ) handlerPushTouchEvent(ev, action)// 上拉加载更多
+//        else handlerPullTouchEvent(ev, action)      // 下拉刷新
+
 
     }
 

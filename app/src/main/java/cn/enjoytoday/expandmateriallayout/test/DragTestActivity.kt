@@ -54,13 +54,13 @@ class DragTestActivity : Activity() {
 
         for (x in 0..5){
             expandGropInfo=ExpandGroupInfo()
-            expandGropInfo.childCount=3
+            expandGropInfo.childCount=8
             expandGropInfo.groupId=x
             expandGropInfo.groupName="test"+x
 
             expandGropInfo.groupDescription="basic test of group"
             groupList.add(expandGropInfo)
-            for (y in 0..2){
+            for (y in 0..8){
                 val info=ExpandChildInfo()
                 info.childDescription="child info basic"
                 info.groupId=x
@@ -188,9 +188,9 @@ class DragTestActivity : Activity() {
 
             override fun onPushEnable(enable: Boolean) {
 
-                footer_text_view!!.text = resources.getString(if (enable) R.string.release_after_loading else R.string.pull_up_loading)
-                footer_image_view!!.visibility = View.VISIBLE
-                footer_image_view!!.rotation = (if (enable) 0 else 180).toFloat()
+                footer_text_view.text = resources.getString(if (enable) R.string.release_after_loading else R.string.pull_up_loading)
+                footer_image_view.visibility = View.VISIBLE
+                footer_image_view.rotation = (if (enable) 0 else 180).toFloat()
 
             }
 

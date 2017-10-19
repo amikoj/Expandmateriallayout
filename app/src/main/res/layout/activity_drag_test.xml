@@ -11,7 +11,7 @@
         android:id="@+id/refresh_layout"
         android:layout_marginTop="80dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ExpandableListView
             android:id="@+id/expandable_list_view"
@@ -20,9 +20,11 @@
             android:clipChildren="true"
             android:listSelector="@android:color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         </ExpandableListView>
+
+
     </cn.enjoytoday.expandrefresh.ExpandRefreshLayout>
 
 </LinearLayout>
