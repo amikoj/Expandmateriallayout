@@ -35,8 +35,6 @@ import android.widget.ScrollView
  */
 class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
 
-
-    private val LOG_TAG = "CustomeSwipeRefreshLayout"
     private val HEADER_VIEW_HEIGHT = 50// HeaderView height (dp)
 
     private val DECELERATE_INTERPOLATION_FACTOR = 2f
@@ -49,7 +47,6 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
     private val DEFAULT_CIRCLE_TARGET = 64
 
     // SuperSwipeRefreshLayout内的目标View，比如RecyclerView,ListView,ScrollView,GridView
-    // etc.
     private var mTarget:View? = null
 
     private var mListener:OnPullRefreshListener? = null// 下拉刷新listener
@@ -160,9 +157,11 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
     }
 
+
+
     /**
- * 更新回调
- */
+     * 更新回调
+     */
     private fun updateListenerCallBack() {
         val distance = mCurrentTargetOffsetTop + mHeadViewContainer!!.getHeight()
         if (mListener != null) mListener!!.onPullDistance(distance)
@@ -170,11 +169,12 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
     }
 
+
     /**
- * 添加头布局
- *
- * @param child
- */
+     * 添加头布局
+     *
+     * @param child
+     */
      fun setHeaderView(child:View?) {
         if (child == null || mHeadViewContainer == null) return
         usingDefaultHeader = false
@@ -206,20 +206,29 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
     constructor(context: Context,attrs: AttributeSet):this(context,attrs,0)
 
      init{
-         /**
-          * getScaledTouchSlop是一个距离，表示滑动的时候，手的移动要大于这个距离才开始移动控件。如果小于这个距离就不触发移动控件
-          */
+         //Distance in pixels a touch can wander before we think the user is scrolling,当手的移动超过这个距离才开始移动控件
          mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
 
-         mMediumAnimationDuration = resources.getInteger(
-                 android.R.integer.config_mediumAnimTime)
+         //中等长度的动画的事件
+         mMediumAnimationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
 
+         //用于设置重写onDraw方法(默认情况下为了性能考虑,会忽略onDraw)
          setWillNotDraw(false)
-         mDecelerateInterpolator = DecelerateInterpolator(
-                 DECELERATE_INTERPOLATION_FACTOR)
 
-         val a = context
-                 .obtainStyledAttributes(attrs, LAYOUT_ATTRS)
+          //动画插值器
+          //AccelerateDecelerateInterpolator 在动画开始与结束的地方速率改变比较慢，在中间的时候加速
+          //AccelerateInterpolator  在动画开始的地方速率改变比较慢，然后开始加速
+          //AnticipateInterpolator 开始的时候向后然后向前甩
+          //AnticipateOvershootInterpolator 开始的时候向后然后向前甩一定值后返回最后的值
+          //BounceInterpolator   动画结束的时候弹起
+          //CycleInterpolator 动画循环播放特定的次数，速率改变沿着正弦曲线
+          //ecelerateInterpolator 在动画开始的地方快然后慢
+          //LinearInterpolator   以常量速率改变
+          //OvershootInterpolator    向前甩一定值后再回到原来位置
+          mDecelerateInterpolator = DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR)
+
+         //
+         val a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS)
          isEnabled = a.getBoolean(0, true)
          a.recycle()
 
@@ -249,7 +258,6 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
  * @return
  */
      override fun getChildDrawingOrder(childCount:Int, i:Int):Int {// 将新添加的View,放到最后绘制
-
         if (mHeaderViewIndex < 0 && mFooterViewIndex < 0) return i
         else if (i == childCount - 2) return mHeaderViewIndex
         else if (i == childCount - 1) return mFooterViewIndex

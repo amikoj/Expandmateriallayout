@@ -83,10 +83,10 @@ class ExpandMasterialLayout(context: Context, attributeset: AttributeSet?, defSt
     override fun onFinishInflate() {
         super.onFinishInflate()
         setOnScrollListener(this)
-        headView=View.inflate(context,R.layout.header_view,null)
-        headView!!.tips.setText(R.string.header_tips)
-        footerView=View.inflate(context,R.layout.header_view,null)
-        footerView!!.tips.setText(R.string.footer_tips)
+//        headView=View.inflate(context,R.layout.header_view,null)
+//        headView!!.tips.setText(R.string.header_tips)
+//        footerView=View.inflate(context,R.layout.header_view,null)
+//        footerView!!.tips.setText(R.string.footer_tips)
     }
 
 

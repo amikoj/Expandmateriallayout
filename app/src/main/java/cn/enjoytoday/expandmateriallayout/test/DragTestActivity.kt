@@ -132,6 +132,7 @@ class DragTestActivity : Activity() {
                 refresh_layout.text_view.text=resources.getString(R.string.loading_text)
                 handler.postDelayed({
                     refresh_layout.text_view.text=resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
+                    refresh_layout.pb_view.visibility=View.GONE
                     handler.postDelayed({
                         refresh_layout.setRefreshing(false)
                     },1000)
@@ -152,6 +153,19 @@ class DragTestActivity : Activity() {
 
         }).setOnPushLoadMoreListener(object :ExpandRefreshLayout.OnPushLoadMoreListener{
             override fun onLoadMore() {
+
+                refresh_layout.footer_text_view!!.text = resources.getString(R.string.loading_text)
+                refresh_layout.footer_image_view!!.visibility = View.GONE
+                refresh_layout.footer_pb_view!!.visibility = View.VISIBLE
+
+                handler.postDelayed({
+                    refresh_layout.footer_text_view!!.text = resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
+                    refresh_layout.footer_pb_view!!.visibility = View.GONE
+                    handler.postDelayed({
+                        refresh_layout.setLoadMore(false)
+                    },1200)
+
+                }, 1200)
 
             }
 
@@ -205,8 +219,6 @@ class DragTestActivity : Activity() {
         var child_icon=view.child_icon
         var child_name=view.child_name
         var child_des=view.child_des
-
-
     }
 
 
