@@ -9,17 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import cn.enjoytoday.expandmateriallayout.*
-import cn.enjoytoday.expandmateriallayout.adapter.ExpandBasicAdapter
-import cn.enjoytoday.expandmateriallayout.beans.ExpandChildInfo
-import cn.enjoytoday.expandmateriallayout.beans.ExpandGroupInfo
-import cn.enjoytoday.expandmateriallayout.beans.OperationBar
-import cn.enjoytoday.expandmateriallayout.callbacks.OperationBarCallback
+import cn.enjoytoday.expandrefresh.adapter.ExpandBasicAdapter
+import cn.enjoytoday.expandrefresh.beans.ExpandChildInfo
+import cn.enjoytoday.expandrefresh.beans.ExpandGroupInfo
+import cn.enjoytoday.expandrefresh.beans.OperationBar
+import cn.enjoytoday.expandrefresh.callbacks.OperationBarCallback
+import cn.enjoytoday.expandrefresh.ExpandRefreshLayout
+import cn.enjoytoday.expandmateriallayout.formatDate
+
+
+import cn.enjoytoday.expandrefresh.R.*
+import cn.enjoytoday.expandmateriallayout.toast
 import kotlinx.android.synthetic.main.activity_drag_test.*
 import kotlinx.android.synthetic.main.child_item.view.*
-import kotlinx.android.synthetic.main.footer_view.*
-import kotlinx.android.synthetic.main.footer_view.view.*
 import kotlinx.android.synthetic.main.group_item.view.*
-import kotlinx.android.synthetic.main.header_view.view.*
+
+
 
 
 class DragTestActivity : Activity() {
@@ -42,11 +47,9 @@ class DragTestActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drag_test)
 
-
         /**
          * 初始化数据
          */
-
         var expandGropInfo: ExpandGroupInfo
 
         for (x in 0..5){
@@ -124,15 +127,24 @@ class DragTestActivity : Activity() {
         refresh_layout.setFooterView(createFooterView())
         refresh_layout.isTargetScrollWithLayout=true
 
+        val image_view=refresh_layout.findViewById(R.id.image_view) as ImageView
+        val pb_view=refresh_layout.findViewById(R.id.pb_view) as ProgressBar
+        val text_view=refresh_layout.findViewById(R.id.text_view) as TextView
+        val footer_text_view=refresh_layout.findViewById(R.id.footer_text_view) as TextView
+        val footer_image_view=refresh_layout.findViewById(R.id.footer_image_view) as ImageView
+        val footer_pb_view=refresh_layout.findViewById(R.id.footer_pb_view) as ProgressBar
+
+        image_view.setImageResource(R.drawable.down_arrow)
+
         refresh_layout.setOnPullRefreshListener(object : ExpandRefreshLayout.OnPullRefreshListener{
             override fun onRefresh() {
                 log(message = "refresh_layout onRefresh")
-                refresh_layout.image_view.visibility = View.GONE
-                refresh_layout.pb_view.visibility=View.VISIBLE
-                refresh_layout.text_view.text=resources.getString(R.string.loading_text)
+                image_view.visibility = View.GONE
+                pb_view.visibility=View.VISIBLE
+                text_view.text=resources.getString(R.string.loading_text)
                 handler.postDelayed({
-                    refresh_layout.text_view.text=resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
-                    refresh_layout.pb_view.visibility=View.GONE
+                    text_view.text=resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
+                    pb_view.visibility=View.GONE
                     handler.postDelayed({
                         refresh_layout.setRefreshing(false)
                     },1000)
@@ -144,23 +156,24 @@ class DragTestActivity : Activity() {
             }
 
             override fun onPullEnable(enable: Boolean) {
-                refresh_layout.text_view.text= resources.getString(if (enable) R.string.release_after_loading else R.string.pull_down_loading)
-                refresh_layout.image_view!!.visibility = View.VISIBLE
-                refresh_layout.pb_view.visibility=View.GONE
-                refresh_layout.image_view!!.rotation = (if (enable) 180 else 0).toFloat()
+
+                text_view.text= resources.getString(if (enable) R.string.release_after_loading else R.string.pull_down_loading)
+                image_view.visibility = View.VISIBLE
+                pb_view.visibility=View.GONE
+                image_view.rotation = (if (enable) 180 else 0).toFloat()
 
             }
 
-        }).setOnPushLoadMoreListener(object :ExpandRefreshLayout.OnPushLoadMoreListener{
+        }).setOnPushLoadMoreListener(object : ExpandRefreshLayout.OnPushLoadMoreListener{
             override fun onLoadMore() {
 
-                refresh_layout.footer_text_view!!.text = resources.getString(R.string.loading_text)
-                refresh_layout.footer_image_view!!.visibility = View.GONE
-                refresh_layout.footer_pb_view!!.visibility = View.VISIBLE
+                footer_text_view.text = resources.getString(R.string.loading_text)
+                footer_image_view.visibility = View.GONE
+                footer_pb_view.visibility = View.VISIBLE
 
                 handler.postDelayed({
-                    refresh_layout.footer_text_view!!.text = resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
-                    refresh_layout.footer_pb_view!!.visibility = View.GONE
+                    footer_text_view.text = resources.getString(R.string.already_update_times,formatDate(System.currentTimeMillis()))
+                    footer_pb_view.visibility = View.GONE
                     handler.postDelayed({
                         refresh_layout.setLoadMore(false)
                     },1200)
@@ -174,7 +187,8 @@ class DragTestActivity : Activity() {
             }
 
             override fun onPushEnable(enable: Boolean) {
-                refresh_layout.footer_text_view!!.text = resources.getString(if (enable) R.string.release_after_loading else R.string.pull_up_loading)
+
+                footer_text_view!!.text = resources.getString(if (enable) R.string.release_after_loading else R.string.pull_up_loading)
                 footer_image_view!!.visibility = View.VISIBLE
                 footer_image_view!!.rotation = (if (enable) 0 else 180).toFloat()
 

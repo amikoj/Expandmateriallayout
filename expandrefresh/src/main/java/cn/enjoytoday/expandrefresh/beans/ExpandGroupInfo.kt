@@ -1,4 +1,4 @@
-package cn.enjoytoday.expandmateriallayout.beans
+package cn.enjoytoday.expandrefresh.beans
 
 /**
  * @date 17-10-16.

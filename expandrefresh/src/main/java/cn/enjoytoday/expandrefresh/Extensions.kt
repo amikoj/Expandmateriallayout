@@ -1,4 +1,4 @@
-package cn.enjoytoday.expandmateriallayout
+package cn.enjoytoday.expandrefresh
 
 import android.app.Activity
 import android.content.Context
@@ -7,23 +7,15 @@ import android.util.Log
 import com.github.johnpersano.supertoasts.SuperToast
 
 /**
- * @date 17-10-16.
- * @className Extensions
- * @serial 1.0.0
- */
-
-
-/**
  * log control,输出log信息,通过添加系统属性控制log信息输出
  */
 fun Any.log(tag:String?=this.javaClass.simpleName,message:String){
     val TAG:String = tag ?: "test"
     if (BuildConfig.DEBUG){
-        Log.e(TAG,message)
+        Log.e(TAG, message)
     }
 
 }
-
 
 /**
  * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -32,8 +24,6 @@ fun Any.dip2px(context: Context, dpValue: Float): Float {
     val scale = context.resources.displayMetrics.density
     return dpValue * scale + 0.5f
 }
-
-
 
 /**
  * toast add.
@@ -45,7 +35,7 @@ fun Activity.toast(message: CharSequence) {
     superToast.textColor = Color.parseColor("#ffffff")
     superToast.setTextSize(SuperToast.TextSize.SMALL)
     superToast.text=message
-    superToast.background = R.drawable.toast_background
+    superToast.background = android.R.color.transparent
     superToast.show()
 }
 

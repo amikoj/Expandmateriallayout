@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
 
-    <cn.enjoytoday.expandmateriallayout.ExpandRefreshLayout
+    <cn.enjoytoday.expandrefresh.ExpandRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_marginTop="80dp"
         android:layout_width="match_parent"
@@ -23,6 +23,6 @@
             android:layout_height="wrap_content">
 
         </ExpandableListView>
-    </cn.enjoytoday.expandmateriallayout.ExpandRefreshLayout>
+    </cn.enjoytoday.expandrefresh.ExpandRefreshLayout>
 
 </LinearLayout>

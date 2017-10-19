@@ -1,4 +1,4 @@
-package cn.enjoytoday.expandmateriallayout
+package cn.enjoytoday.expandrefresh
 
 import android.view.View
 import kotlinx.android.synthetic.main.child_item_parent.view.*

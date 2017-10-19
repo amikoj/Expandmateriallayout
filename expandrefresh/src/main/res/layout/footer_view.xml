@@ -18,7 +18,6 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/footer_text_view"
         android:layout_toStartOf="@id/footer_text_view" />
 
     <ImageView
@@ -26,7 +25,6 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/footer_text_view"
         android:layout_toStartOf="@id/footer_text_view"
         android:contentDescription="@null" />
 

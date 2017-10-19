@@ -1,22 +1,20 @@
-package cn.enjoytoday.expandmateriallayout.adapter
+package cn.enjoytoday.expandrefresh.adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import cn.enjoytoday.expandmateriallayout.ChildViewHolder
-import cn.enjoytoday.expandmateriallayout.R
-import cn.enjoytoday.expandmateriallayout.beans.ExpandChildInfo
-import cn.enjoytoday.expandmateriallayout.beans.ExpandGroupInfo
-import cn.enjoytoday.expandmateriallayout.beans.OperationBar
-import cn.enjoytoday.expandmateriallayout.callbacks.OperationBarCallback
-import cn.enjoytoday.expandmateriallayout.dip2px
-import cn.enjoytoday.expandmateriallayout.log
+import cn.enjoytoday.expandrefresh.ChildViewHolder
+import cn.enjoytoday.expandrefresh.R
+import cn.enjoytoday.expandrefresh.beans.ExpandChildInfo
+import cn.enjoytoday.expandrefresh.beans.ExpandGroupInfo
+import cn.enjoytoday.expandrefresh.beans.OperationBar
+import cn.enjoytoday.expandrefresh.callbacks.OperationBarCallback
+import cn.enjoytoday.expandrefresh.dip2px
+import cn.enjoytoday.expandrefresh.log
 import kotlinx.android.synthetic.main.child_item_parent.view.*
 
 /**
@@ -100,7 +98,7 @@ abstract class  ExpandBasicAdapter(private var context:Context,private var child
     /**
      * 添加操作按钮,提供两种方式,一种显示图片,一种显示文字
      */
-    fun addOperationBar(operationBar: OperationBar):ExpandBasicAdapter{
+    fun addOperationBar(operationBar: OperationBar): ExpandBasicAdapter {
         if (!operation_bars.contains(operationBar)){
             if (operation_bars.size>5){
                 operation_bars.removeAt(0)

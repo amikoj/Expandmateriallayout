@@ -1,4 +1,4 @@
-package cn.enjoytoday.expandmateriallayout
+package cn.enjoytoday.expandrefresh
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

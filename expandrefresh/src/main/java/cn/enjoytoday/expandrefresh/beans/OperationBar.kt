@@ -1,4 +1,4 @@
-package cn.enjoytoday.expandmateriallayout.beans
+package cn.enjoytoday.expandrefresh.beans
 
 import android.support.annotation.IdRes
 import android.view.Gravity

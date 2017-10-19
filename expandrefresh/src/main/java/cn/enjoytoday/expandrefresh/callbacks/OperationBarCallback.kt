@@ -1,8 +1,8 @@
-package cn.enjoytoday.expandmateriallayout.callbacks
+package cn.enjoytoday.expandrefresh.callbacks
 
 import android.telecom.Call
 import android.view.View
-import cn.enjoytoday.expandmateriallayout.beans.OperationBar
+import cn.enjoytoday.expandrefresh.beans.OperationBar
 import java.text.FieldPosition
 
 /**
@@ -15,7 +15,7 @@ interface OperationBarCallback :Callback {
     /**
      * 点击操作回调
      */
-    fun onClick(view: View,parent:View?,operationBar: OperationBar,groupPosition: Int,childPosition:Int)
+    fun onClick(view: View, parent:View?, operationBar: OperationBar, groupPosition: Int, childPosition:Int)
 
 //    fun scrollItem(view: View,groupPosition: Int,childPosition:Int)
 
