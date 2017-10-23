@@ -546,7 +546,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 if (layoutManager.findLastCompletelyVisibleItemPosition() === count - 1) {
                     return true
                 }
-            } else if (layoutManager is StaggeredGridLayoutManager) {
+            } else if (layoutManager is StaggeredGridLayoutManager && count > 0) {
                 val lastItems = IntArray(2)
                 layoutManager.findLastCompletelyVisibleItemPositions(lastItems)
                 val lastItem = Math.max(lastItems[0], lastItems[1])
