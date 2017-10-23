@@ -199,6 +199,18 @@ class DragTestActivity : Activity() {
 
         expandable_list_view.setAdapter(adapter)
 
+        expandable_list_view.setOnGroupExpandListener (object :ExpandableListView.OnGroupExpandListener{
+
+            var previousPosition=0
+
+            override fun onGroupExpand(groupPosition: Int) {
+                if (groupPosition!=previousPosition)
+                    expandable_list_view.collapseGroup(previousPosition)
+                previousPosition=groupPosition
+
+            }
+        })
+
     }
 
 

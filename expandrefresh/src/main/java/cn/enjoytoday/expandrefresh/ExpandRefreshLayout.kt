@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
@@ -537,8 +538,6 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      * @return
      */
     private fun isChildScrollToBottom():Boolean {
-        log(message = "isChildScrollToBottom")
-//        if (isChildScrollToTop() ) return false
         if (mTarget is RecyclerView) {
             val recyclerView = mTarget as RecyclerView?
             val layoutManager = recyclerView!!.layoutManager
@@ -549,37 +548,32 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 }
             } else if (layoutManager is StaggeredGridLayoutManager) {
                 val lastItems = IntArray(2)
-                layoutManager
-                        .findLastCompletelyVisibleItemPositions(lastItems)
+                layoutManager.findLastCompletelyVisibleItemPositions(lastItems)
                 val lastItem = Math.max(lastItems[0], lastItems[1])
-                if (lastItem == count - 1)
-                {
+                if (lastItem == count - 1) {
                     return true
                 }
             }
             return false
         } else if (mTarget is AbsListView) {
-//            val absListView = mTarget as AbsListView?
-//            val count = absListView!!.adapter.count
-//            val fristPos = absListView.firstVisiblePosition
-//            if (fristPos == 0 && absListView.getChildAt(0).top >= absListView.paddingTop) {
-//                return false
-//            }
-//            val lastPos = absListView.lastVisiblePosition
-//            if (lastPos > 0 && count > 0 && lastPos == count - 1) {
-//                return true
-//            }
-//            return false
-            return true
+            val absListView = mTarget as AbsListView?
+            val count = absListView!!.adapter.count
+            val fristPos = absListView.firstVisiblePosition
+            var flag=false
+            if (fristPos == 0 && absListView.getChildAt(0).top >= absListView.paddingTop) {
+                flag= false
+            }
+            val lastPos = absListView.lastVisiblePosition
+            if (lastPos > 0 && count > 0 && lastPos == count - 1) {
+                flag= true
+            }
+            return flag
         } else if (mTarget is ScrollView) {
             val scrollView = mTarget as ScrollView?
             val view = scrollView!!.getChildAt(scrollView.childCount - 1)
-            if (view != null)
-            {
+            if (view != null) {
                 val diff = (view.bottom - (scrollView.height + scrollView.scrollY))
-
-                if (diff == 0)
-                {
+                if (diff == 0) {
                     return true
                 }
             }
@@ -605,7 +599,6 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      */
      override fun onInterceptTouchEvent(ev:MotionEvent):Boolean {
 
-
         ensureTarget()
         val action = MotionEventCompat.getActionMasked(ev)
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
@@ -630,13 +623,21 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 if (y == -1f) return false
 
                 var yDiff = 0f
+
+
+
+
+
+
+
                 if (isChildScrollToBottom()) {
                     yDiff = mInitialMotionY - y// 计算上拉距离
                     if (yDiff > mTouchSlop && !mIsBeingDragged) {// 判断是否上拉的距离足够
                         mIsBeingDragged = true// 正在上拉
 
                     }
-                } else {
+                }
+                if(isChildScrollToTop()) {
                     yDiff = y - mInitialMotionY// 计算下拉距离
                     if (yDiff > mTouchSlop && !mIsBeingDragged) {// 判断是否下拉的距离足够
                         mIsBeingDragged = true// 正在下拉
@@ -653,10 +654,13 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 var yDiff = 0f
                 if (isChildScrollToBottom()) {
                     yDiff = mInitialMotionY - y
-                    if (yDiff > mTouchSlop && !mIsBeingDragged) {
+                    if (yDiff> mTouchSlop && !mIsBeingDragged) {
                         mIsBeingDragged = true
                     }
-                } else {
+                }
+
+
+                if(isChildScrollToTop())  {
                     yDiff = y - mInitialMotionY
                     if (yDiff > mTouchSlop && !mIsBeingDragged) {
                         mIsBeingDragged = true
@@ -670,6 +674,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 mActivePointerId = INVALID_POINTER
             }
         }
+//        println(message = "onInterceptTouchEvent mIsBeingDragged:$mIsBeingDragged")
         return mIsBeingDragged// 如果正在拖动，则拦截子View的事件
 
     }
@@ -692,6 +697,8 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 
 
     override fun onTouchEvent(ev:MotionEvent):Boolean {
+
+//        Log.e("onTouchEvent","拦截子view.")
         val action = MotionEventCompat.getActionMasked(ev)
         if (mReturningToStart && action == MotionEvent.ACTION_DOWN) {
             mReturningToStart = false
@@ -701,39 +708,238 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
             return false
         }
 
-        when {
-            beforey==-1f -> beforey=ev.y
-            ev.y-beforey>0 -> {
-                beforey=ev.y
-                return  handlerPullTouchEvent(ev, action)      // 下拉刷新
-            }
-            ev.y-beforey<0 -> return  handlerPushTouchEvent(ev, action)      // 下拉刷新
-        }
 
-        return false
 
-//        return if (isChildScrollToBottom() ) handlerPushTouchEvent(ev, action)// 上拉加载更多
+       return handlerTouchEvent(ev,action)
+//        return if (isChildScrollToBottom() ) handlerPushTouchEvent(ev, action)  // 上拉加载更多
 //        else handlerPullTouchEvent(ev, action)      // 下拉刷新
 
 
     }
 
-    private fun handlerPullTouchEvent(ev:MotionEvent, action:Int):Boolean {
-        when (action) {
+
+    var scrollTop=false
+
+    /**
+     * 处理上下滑动事件
+     */
+    private fun handlerTouchEvent(ev:MotionEvent, action:Int):Boolean{
+//        Log.e("handlerTouchEvent","处理上下滑动事件,handlerTouchEvent.")
+        when(action){
             MotionEvent.ACTION_DOWN -> {
-                mActivePointerId = MotionEventCompat.getPointerId(ev, 0)
+                mActivePointerId = ev.getPointerId(0)
                 mIsBeingDragged = false
             }
 
             MotionEvent.ACTION_MOVE -> {
-                val pointerIndex = MotionEventCompat.findPointerIndex(ev,
-                        mActivePointerId)
+                /**
+                 * action_move 滑动事件
+                 */
+                val pointerIndex = ev.findPointerIndex(mActivePointerId)
+                if (pointerIndex < 0) {
+                    Log.e("handlerTouchEvent","Got ACTION_MOVE event but have an invalid active pointer id.")
+                    return false
+                }
+
+                val y = ev.getY(pointerIndex)
+                var overScroll = (mInitialMotionY - y) * DRAG_RATE
+                if (mIsBeingDragged) {
+
+                    if (overScroll>0){
+                        /**
+                         * 上拉刷新
+                         */
+//                        Log.e("handlerTouchEvent","上拉 action_move:$overScroll.")
+                        if (!scrollTop)
+                            scrollTop=true
+                        pushDistance = overScroll.toInt()
+                        updateFooterViewPosition()
+                        if (mOnPushLoadMoreListener != null) {
+                            mOnPushLoadMoreListener!!.onPushEnable(pushDistance >= mFooterViewHeight)
+                        }
+
+                    }else{
+                        /**
+                         * 下拉刷新
+                         */
+
+//                        Log.e("handlerTouchEvent","下拉 action_move:$overScroll.")
+                        overScroll *= (-1)
+                        val originalDragPercent = overScroll / mTotalDragDistance
+                        if (originalDragPercent < 0) return false
+
+                        val dragPercent = Math.min(1f, Math.abs(originalDragPercent))
+                        val extraOS = Math.abs(overScroll) - mTotalDragDistance
+                        val slingshotDist = if (mUsingCustomStart)
+                            mSpinnerFinalOffset - mOriginalOffsetTop
+                        else
+                            mSpinnerFinalOffset
+                        val tensionSlingshotPercent = Math.max(0f, Math.min(extraOS, slingshotDist * 2)
+                                / slingshotDist)
+                        val tensionPercent = ((tensionSlingshotPercent / 4) - Math
+                                .pow((tensionSlingshotPercent / 4).toDouble(), 2.0)).toFloat() * 2f
+                        val extraMove = (slingshotDist) * tensionPercent * 2f
+
+                        val targetY = mOriginalOffsetTop + ((slingshotDist * dragPercent) + extraMove).toInt()
+                        if (mHeadViewContainer!!.visibility != View.VISIBLE) {
+                            mHeadViewContainer!!.visibility = View.VISIBLE
+                        }
+
+                        if (!mScale) {
+                            ViewCompat.setScaleX(mHeadViewContainer, 1f)
+                            ViewCompat.setScaleY(mHeadViewContainer, 1f)
+                        }
+
+
+
+                        if (usingDefaultHeader) {
+                            var alpha = overScroll / mTotalDragDistance
+                            if (alpha >= 1.0f) {
+                                alpha = 1.0f
+                            }
+                            ViewCompat.setScaleX(defaultProgressView, alpha)
+                            ViewCompat.setScaleY(defaultProgressView, alpha)
+                            ViewCompat.setAlpha(defaultProgressView, alpha)
+                        }
+                        if (overScroll < mTotalDragDistance) {
+                            if (mScale) {
+                                setAnimationProgress(overScroll / mTotalDragDistance)
+                            }
+                            if (mListener != null) {
+                                mListener!!.onPullEnable(false)
+                            }
+                        } else {
+                            if (mListener != null) mListener!!.onPullEnable(true)
+
+                        }
+                        setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop, true)
+                    }
+                }
+            }
+
+
+            MotionEventCompat.ACTION_POINTER_DOWN -> {
+                /**
+                 * action_pointer_down
+                 */
+                val index = MotionEventCompat.getActionIndex(ev)
+                mActivePointerId = ev.getPointerId(index)
+            }
+
+            MotionEventCompat.ACTION_POINTER_UP -> onSecondaryPointerUp(ev)
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL ->{
+                /**
+                 * action_up and action cancel handler
+                 */
+
+                val flag=scrollTop
+                scrollTop=false
+                if (!flag) {
+
+//                    Log.e("handlerTouchEvent", "下拉 action_up or action cancel.")
+                    /**
+                     * 下拉
+                     */
+                    if (mActivePointerId == INVALID_POINTER) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            log(message = "Got ACTION_UP event but don't have an active pointer id.")
+                        }
+                        return false
+                    }
+                    val pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId)
+                    val y = MotionEventCompat.getY(ev, pointerIndex)
+                    val overscrollTop = (y - mInitialMotionY) * DRAG_RATE
+                    mIsBeingDragged = false
+                    if (overscrollTop > mTotalDragDistance) {
+                        setRefreshing(true, true /* notify */)
+                    } else {
+                        mRefreshing = false
+                        var listener: Animation.AnimationListener? = null
+                        if (!mScale) {
+                            listener = object : Animation.AnimationListener {
+                                override fun onAnimationStart(animation: Animation?) {
+
+                                }
+
+                                override fun onAnimationEnd(animation: Animation?) {
+                                    if (!mScale) {
+                                        startScaleDownAnimation(null)
+                                    }
+                                }
+
+                                override fun onAnimationRepeat(animation: Animation) {}
+
+                            }
+                            animateOffsetToStartPosition(mCurrentTargetOffsetTop, listener)
+                        }
+                    }
+                    mActivePointerId = INVALID_POINTER
+                    return false
+                }else {
+
+//                    Log.e("handlerTouchEvent", "上拉 action_up or action cancel.")
+                    /**
+                     * 上拉刷新
+                     */
+
+                    if (mActivePointerId == INVALID_POINTER) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            log(message = "Got ACTION_UP event but don't have an active pointer id.")
+                        }
+                        return false
+                    }
+                    val pointerIndex = ev.findPointerIndex(mActivePointerId)
+                    val y = ev.getY(pointerIndex)
+                    val overScrollBottom = (mInitialMotionY - y) * DRAG_RATE// 松手是下拉的距离
+                    mIsBeingDragged = false
+                    mActivePointerId = INVALID_POINTER
+                    pushDistance = if (overScrollBottom < mFooterViewHeight || mOnPushLoadMoreListener == null) 0  // 直接取消
+                    else mFooterViewHeight // 下拉到mFooterViewHeight
+
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                        updateFooterViewPosition()
+                        if (pushDistance == mFooterViewHeight && mOnPushLoadMoreListener != null) {
+                            mLoadMore = true
+                            mOnPushLoadMoreListener!!.onLoadMore()
+                        }
+                    } else {
+                        animatorFooterToBottom(overScrollBottom.toInt(), pushDistance)
+                    }
+
+
+                    return false
+                }
+
+
+            }
+
+        }
+
+
+
+        return false
+    }
+
+
+
+
+
+    private fun handlerPullTouchEvent(ev:MotionEvent, action:Int):Boolean {
+        when (action) {
+            MotionEvent.ACTION_DOWN -> {
+                mActivePointerId = ev.getPointerId(0)
+                mIsBeingDragged = false
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                val pointerIndex = ev.findPointerIndex(mActivePointerId)
                 if (pointerIndex < 0) {
                     log(message =  "Got ACTION_MOVE event but have an invalid active pointer id.")
                     return false
                 }
 
-                val y = MotionEventCompat.getY(ev, pointerIndex)
+                val y = ev.getY(pointerIndex)
                 val overscrollTop = (y - mInitialMotionY) * DRAG_RATE
                 if (mIsBeingDragged) {
                     val originalDragPercent = overscrollTop / mTotalDragDistance
@@ -855,15 +1061,15 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 log(message =  "debug:onTouchEvent ACTION_DOWN")
             }
             MotionEvent.ACTION_MOVE -> {
-                val pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId)
+                val pointerIndex = ev.findPointerIndex(mActivePointerId)
                 if (pointerIndex < 0) {
                     log(message = "Got ACTION_MOVE event but have an invalid active pointer id.")
                     return false
                 }
-                val y = MotionEventCompat.getY(ev, pointerIndex)
-                val overscrollBottom = (mInitialMotionY - y) * DRAG_RATE
+                val y = ev.getY(pointerIndex)
+                val overScrollBottom = (mInitialMotionY - y) * DRAG_RATE
                 if (mIsBeingDragged) {
-                    pushDistance = overscrollBottom.toInt()
+                    pushDistance = overScrollBottom.toInt()
                     updateFooterViewPosition()
                     if (mOnPushLoadMoreListener != null) {
                         mOnPushLoadMoreListener!!.onPushEnable(pushDistance >= mFooterViewHeight)
@@ -872,7 +1078,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
             }
             MotionEventCompat.ACTION_POINTER_DOWN -> {
                 val index = MotionEventCompat.getActionIndex(ev)
-                mActivePointerId = MotionEventCompat.getPointerId(ev, index)
+                mActivePointerId = ev.getPointerId(index)
             }
 
             MotionEventCompat.ACTION_POINTER_UP -> onSecondaryPointerUp(ev)
@@ -884,12 +1090,12 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                     }
                     return false
                 }
-                val pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId)
-                val y = MotionEventCompat.getY(ev, pointerIndex)
-                val overscrollBottom = (mInitialMotionY - y) * DRAG_RATE// 松手是下拉的距离
+                val pointerIndex = ev.findPointerIndex(mActivePointerId)
+                val y = ev.getY(pointerIndex)
+                val overScrollBottom = (mInitialMotionY - y) * DRAG_RATE// 松手是下拉的距离
                 mIsBeingDragged = false
                 mActivePointerId = INVALID_POINTER
-                pushDistance = if (overscrollBottom < mFooterViewHeight || mOnPushLoadMoreListener == null) 0  // 直接取消
+                pushDistance = if (overScrollBottom < mFooterViewHeight || mOnPushLoadMoreListener == null) 0  // 直接取消
                 else mFooterViewHeight // 下拉到mFooterViewHeight
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -899,7 +1105,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                         mOnPushLoadMoreListener!!.onLoadMore()
                     }
                 } else {
-                    animatorFooterToBottom(overscrollBottom.toInt(), pushDistance)
+                    animatorFooterToBottom(overScrollBottom.toInt(), pushDistance)
                 }
                 return false
             }
@@ -1107,7 +1313,6 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
      * 修改底部布局的位置-敏感pushDistance
      */
     private fun updateFooterViewPosition() {
-
         mFooterViewContainer!!.visibility = View.VISIBLE
         mFooterViewContainer!!.bringToFront()
         //针对4.4及之前版本的兼容
@@ -1315,8 +1520,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
         private fun getBgRect():RectF {
 //            width = getWidth()
 //            height = getHeight()
-            if (bgRect == null)
-            {
+            if (bgRect == null) {
                 val offset = (density * 2).toInt()
                 bgRect = RectF(offset.toFloat(), offset.toFloat(), (width - offset).toFloat(), (height - offset).toFloat())
             }
@@ -1328,8 +1532,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
 //
 //            width = getWidth()
 //            height = getHeight()
-            if (ovalRect == null)
-            {
+            if (ovalRect == null) {
                 val offset = (density * 8).toInt()
                 ovalRect = RectF(offset.toFloat(), offset.toFloat(), (width - offset).toFloat(), (height - offset).toFloat())
             }
@@ -1376,8 +1579,7 @@ class ExpandRefreshLayout(context: Context, attrs: AttributeSet?, defStyleAttr: 
                 bgPaint!!.color = circleBackgroundColor
                 bgPaint!!.style = Paint.Style.FILL
                 bgPaint!!.isAntiAlias = true
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     this.setLayerType(View.LAYER_TYPE_SOFTWARE, bgPaint)
                 }
                 bgPaint!!.setShadowLayer(4.0f, 0.0f, 2.0f, shadowColor)
